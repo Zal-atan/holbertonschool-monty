@@ -46,10 +46,56 @@
 
 void read_file(FILE *fileReader)
 {
-	int i;
+	int lineNum;
 	char *line = NULL;
 	size_t line_size = 0;
 
-	for (i = 1; getline(&line, &line_size, fileReader) != -1; i++)
-		tokenizeLine()
+	for (lineNum = 1; getline(&line, &line_size, fileReader) != -1; lineNum++)
+		tokenize_line(line, i);
+}
+
+/**
+ * tokenize_line - tokenizes the current line to find current command
+ *
+ * @line: line of code to tokenize
+ * @lineNum: line number currently tokenizing
+ *
+ * Return: Returns 1 on success
+ */
+int tokenize_line(char *line, int lineNum)
+{
+	char *func, *numValue;
+
+	if (line == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+
+	func = strtok(line, " \n\a\t");
+	if (func == NULL)
+		return (1);
+
+	numValue = strtok(NULL, "\n\a\t");
+
+	match_function(func, numValue, lineNum);
+
+	return (1);
+}
+
+void match_function(char *func, char *numValue, int lineNum)
+{
+	int i, flag = 1;
+	instruction_t instruction[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop}
+	};
+
+
+
 }
