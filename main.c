@@ -1,6 +1,6 @@
 #include "monty.h"
 
-*head = NULL;
+stack_t *head = NULL;
 /**
  * main - This function takes input to call functions on stack
  *
@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 {
 		if (argc != 2)
 		{
-			fprintf(stderr, "USAGE: monty file\n")
+			fprintf(stderr, "USAGE: monty file\n");
 			free_stack(&head);
 			exit(EXIT_FAILURE);
 		}
@@ -30,14 +30,14 @@ int main(int argc, char **argv)
  * Return: Returns pointer to new node if successful, else NULL
  */
 
-stack_t addNewNode(int num)
+stack_t *addNewNode(int num)
 {
 	stack_t *stack;
 
 	stack = malloc(sizeof(stack_t));
 	if (stack == NULL)
 	{
-		fprintf(stderr, "Error: malloc failed\n")
+		fprintf(stderr, "Error: malloc failed\n");
 		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}

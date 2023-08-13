@@ -30,6 +30,7 @@ typedef struct stack_s
 	struct stack_s *next;
 } stack_t;
 
+
 /**
  * struct instruction_s - opcode and its function
  * @opcode: the opcode
@@ -47,13 +48,24 @@ typedef struct instruction_s
 /* External Variable */
 extern stack_t *head;
 
+typedef void (*instruction)(stack_t **stack, unsigned int line_number);
 
 /* Function Prototypes */
 void open_file(char *filename);
 void read_file(FILE *fileReader);
 int tokenize_line(char *line, int lineNum);
 void match_function(char *func, char *numValue, int lineNum);
-stack_t addNewNode(int num);
+void execute_func(instruction f, char *func, char *numValue, int lineNum);
+stack_t *addNewNode(int num);
 void free_stack(stack_t **stack);
+
+/*Stack Functions*/
+void push(stack_t **newNode,  unsigned int lineNum);
+void pop(stack_t **stack, unsigned int lineNum);
+void swap(stack_t **stack, unsigned int lineNum);
+void add(stack_t **stack, unsigned int lineNum);
+void pall(stack_t **stack, unsigned int lineNum);
+void pint(stack_t **stack, unsigned int lineNum);
+void nop(stack_t **stack, unsigned int lineNum);
 
 #endif

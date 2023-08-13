@@ -54,7 +54,7 @@ void read_file(FILE *fileReader)
 	size_t line_size = 0;
 
 	for (lineNum = 1; getline(&line, &line_size, fileReader) != -1; lineNum++)
-		tokenize_line(line, i);
+		tokenize_line(line, lineNum);
 }
 
 /**
@@ -134,7 +134,7 @@ void match_function(char *func, char *numValue, int lineNum)
  * @numValue: string to be converted to number to insert
  * @lineNum: current line in the file being read
  */
-void execute_func(op_func f, char *func, char *numValue, int lineNum)
+void execute_func(instruction f, char *func, char *numValue, int lineNum)
 {
 	stack_t *newNode;
 	int flag = 1, i;
@@ -148,7 +148,7 @@ void execute_func(op_func f, char *func, char *numValue, int lineNum)
 		exit(EXIT_FAILURE);
 		}
 
-		if (numValue[0] == "-")
+		if (numValue[0] == '-')
 		{
 			numValue = numValue + 1;
 			flag *= -1;
