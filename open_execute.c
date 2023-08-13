@@ -7,14 +7,15 @@
  *
  **/
 
- void open_file(char *filename)
- {
+void open_file(char *filename)
+{
 	int fileCheck;
 	FILE *fileReader;
 
 	if (filename == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}
 
@@ -22,6 +23,7 @@
 	if (fileCheck == -1)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}
 
@@ -29,13 +31,14 @@
 	if (fileReader == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}
 
 	read_file(fileReader);
 
 	fclose(fileReader);
- }
+}
 
 /**
  * read_file - Reads the input file line by line
@@ -69,6 +72,7 @@ int tokenize_line(char *line, int lineNum)
 	if (line == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
+		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}
 
@@ -83,6 +87,13 @@ int tokenize_line(char *line, int lineNum)
 	return (1);
 }
 
+/**
+ * match_function - matches func with correct function pointer
+ *
+ * @func: tokenized command found
+ * @numValue: string of number to be added to node
+ * @lineNum: current line number of input file
+ */
 void match_function(char *func, char *numValue, int lineNum)
 {
 	int i, flag = 1;
@@ -93,9 +104,68 @@ void match_function(char *func, char *numValue, int lineNum)
 		{"pop", pop},
 		{"swap", swap},
 		{"add", add},
-		{"nop", nop}
+		{"nop", nop},
+		{NULL, NULL}
 	};
 
+	for (i = 0; instruction[i].opcode != NULL; i++)
+	{
+		if (strcmp(func, instruction[i].opcode) == 0)
+		{
+			execute_func(instruction[i].f, func, numValue, lineNum);
+			flag = 0;
+		}
+	}
+
+	if (flag == 1)
+	{
+		fprintf(stderr, "L%d: unkown instruction %s\n", lineNum, func);
+		free_stack(&head);
+		exit(EXIT_FAILURE);
+	}
+}
 
 
+/**
+ * execute_func - Executes correct function pointer
+ *
+ * @f: pointer to correct function
+ * @func: string that was called
+ * @numValue: string to be converted to number to insert
+ * @lineNum: current line in the file being read
+ */
+void execute_func(op_func f, char *func, char *numValue, int lineNum)
+{
+	stack_t *newNode;
+	int flag = 1, i;
+
+	if (strcmp(func, "push") == 0)
+	{
+		if (numValue == NULL)
+		{
+		fprintf(stderr, "L%d: usage: push integer\n", lineNum);
+		free_stack(&head);
+		exit(EXIT_FAILURE);
+		}
+
+		if (numValue[0] == "-")
+		{
+			numValue = numValue + 1;
+			flag *= -1;
+		}
+
+		for (i = 0; numValue[i] != '\0'; i++)
+		{
+			if (isdigit(numValue[i] == 0))
+			{
+				fprintf(stderr, "L%d: usage: push integer\n", lineNum);
+				free_stack(&head);
+				exit(EXIT_FAILURE);
+			}
+		}
+		newNode = addNewNode(atoi(numValue) * flag);
+		f(&newNode, lineNum);
+	}
+	else
+		f(&head, lineNum);
 }
