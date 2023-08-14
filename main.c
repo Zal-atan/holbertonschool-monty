@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 /**
  * addNewNode - creates a new node with a value of n
  *
- * @n: Number stored inside of new node
+ * @num: Number stored inside of new node
  *
  * Return: Returns pointer to new node if successful, else NULL
  */

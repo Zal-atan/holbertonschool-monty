@@ -119,7 +119,7 @@ void match_function(char *func, char *numValue, int lineNum)
 
 	if (flag == 1)
 	{
-		fprintf(stderr, "L%d: unkown instruction %s\n", lineNum, func);
+		fprintf(stderr, "L%d: unknown instruction %s\n", lineNum, func);
 		free_stack(&head);
 		exit(EXIT_FAILURE);
 	}
