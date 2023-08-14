@@ -55,6 +55,8 @@ void read_file(FILE *fileReader)
 
 	for (lineNum = 1; getline(&line, &line_size, fileReader) != -1; lineNum++)
 		tokenize_line(line, lineNum);
+
+	free(line);
 }
 
 /**
